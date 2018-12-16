@@ -149,14 +149,51 @@ class Bluebox():
             _from = _from.reshape(-1,1)
             values = np.insert(values,0,0).reshape(-1,1)
             _to = np.insert(_from[1:],len(_from)-1,np.inf).reshape(-1,1)
-            table = np.concatenate([_from, _to, values],axis=1)
-            return pd.DataFrame(table,columns=['from','to','freq'])
+            _midpoint = np.sqrt(_from * _to)
+            _midpoint[-1] = _from[-1]
+            table = np.concatenate([_from, _to, _midpoint, values],axis=1)
+            return pd.DataFrame(table,columns=['from','to','midpoint','freq'])
+
+        def summaries(self, xs):
+            mu = np.mean(xs)
+            med = np.median(xs)
+            values, _from = np.histogram(xs, bins='sqrt')
+            i = np.argmax(values)
+            if i<len(xs)-1:
+                mode = np.sqrt(_from[i]*_from[i+1])
+            else:
+                mode = _from
+            q1 = np.percentile(xs,25)
+            q3 = np.percentile(xs,75)
+            iqr = q3-q1
+            return mu,med,mode,q1,q3,iqr
+
+        def summary_tables(self):
+            inputs = pd.DataFrame()
+            for var in self.input_names:
+                mu,med,mode,q1,q3,iqr = self.summaries(self.input_samples[var])
+                summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
+                           ('Q1',q1),('Q3',q3),('IQR',iqr)]
+                inputs.append(pd.DataFrame.from_records(summaries))
+
+            outputs = pd.DataFrame()
+            for var in self.bluebox:
+                mu,med,mode,q1,q3,iqr =  self.summaries(self.outcomes[var])
+                summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
+                           ('Q1',q1),('Q3',q3),('IQR',iqr)]
+                outputs.append(pd.DataFrame.from_records(summaries))
+            return inputs, outputs
+
+
         def to_excel(self, filename = 'sensitivity.xlsx'):
             writer = pd.ExcelWriter(filename)
-            self.input_samples.to_excel(writer,'Inputs')
-            self.outcomes.to_excel(writer,'Outputs')
-            for var in vars: pd_hist(u[var]).to_excel(writer,'in '+var)
-            for outcome in outcomes: pd_hist(v[outcome]).to_excel(writer,'out '+outcome)
+            i, o = self.summary_tables()
+            i.to_excel(writer,'input summaries')
+            o.to_excel(writer,'output summaries')
+            self.input_samples.to_excel(writer,'full inputs')
+            self.outcomes.to_excel(writer,'full outputs')
+            for var in self.input_names: self.pd_hist(self.input_samples[var]).to_excel(writer,'in '+var)
+            for outcome in self.bluebox: self.pd_hist(self.outcomes[outcome]).to_excel(writer,'out '+outcome)
         def plot(self):
                 for var in self.input_names:
                     fig, ax = plt.subplots()

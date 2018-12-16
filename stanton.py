@@ -169,19 +169,19 @@ class Bluebox():
             return mu,med,mode,q1,q3,iqr
 
         def summary_tables(self):
-            inputs = pd.DataFrame()
+            inputs = pd.DataFrame(columns = \
+                    ['name','mean','median','mode', 'Q1', 'Q3','IQR'])
             for var in self.input_names:
                 mu,med,mode,q1,q3,iqr = self.summaries(self.input_samples[var])
-                summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
-                           ('Q1',q1),('Q3',q3),('IQR',iqr)]
-                inputs = inputs.append(pd.DataFrame.from_records(summaries))
+                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr}]
+                inputs = inputs.append(pd.DataFrame(summaries), sort = False)
 
-            outputs = pd.DataFrame()
+            outputs = pd.DataFrame(columns = \
+                    ['name','mean','median','mode', 'Q1', 'Q3','IQR'])
             for var in self.bluebox:
                 mu,med,mode,q1,q3,iqr =  self.summaries(self.outcomes[var])
-                summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
-                           ('Q1',q1),('Q3',q3),('IQR',iqr)]
-                outputs = outputs.append(pd.DataFrame.from_records(summaries))
+                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr}]
+                outputs = outputs.append(pd.DataFrame(summaries), sort = False)
             return inputs, outputs
 
 

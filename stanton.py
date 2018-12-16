@@ -174,14 +174,14 @@ class Bluebox():
                 mu,med,mode,q1,q3,iqr = self.summaries(self.input_samples[var])
                 summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
                            ('Q1',q1),('Q3',q3),('IQR',iqr)]
-                inputs.append(pd.DataFrame.from_records(summaries))
+                inputs = inputs.append(pd.DataFrame.from_records(summaries))
 
             outputs = pd.DataFrame()
             for var in self.bluebox:
                 mu,med,mode,q1,q3,iqr =  self.summaries(self.outcomes[var])
                 summaries = [('name',var),('mean',mu),('median',med),('mode',mode),
                            ('Q1',q1),('Q3',q3),('IQR',iqr)]
-                outputs.append(pd.DataFrame.from_records(summaries))
+                outputs = outputs.append(pd.DataFrame.from_records(summaries))
             return inputs, outputs
 
 

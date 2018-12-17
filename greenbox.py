@@ -190,8 +190,8 @@ class Bluebox():
         def to_excel(self, filename = 'sensitivity.xlsx'):
             writer = pd.ExcelWriter(filename)
             i, o = self.summary_tables()
-            o.to_excel(writer,'input summaries')
-            i.to_excel(writer,'output summaries')
+            o.to_excel(writer,'output summaries')
+            i.to_excel(writer,'input summaries')
             self.input_samples.to_excel(writer,'full inputs')
             self.outcomes.to_excel(writer,'full outputs')
             for var in self.input_names: self.pd_hist(self.input_samples[var]).to_excel(writer,'in '+var)

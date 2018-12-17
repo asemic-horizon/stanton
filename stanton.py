@@ -165,35 +165,38 @@ class Bluebox():
                 mode = _from
             q1 = np.percentile(xs,25)
             q3 = np.percentile(xs,75)
+            ci05 = np.percentile(xs,5)
+            ci95 = np.percentile(xs,95)
             iqr = q3-q1
-            return mu,med,mode,q1,q3,iqr
+            return mu,med,mode,q1,q3,iqr, ci05, ci95
 
         def summary_tables(self):
-            inputs = pd.DataFrame(columns = \
-                    ['name','mean','median','mode', 'Q1', 'Q3','IQR'])
-            for var in self.input_names:
-                mu,med,mode,q1,q3,iqr = self.summaries(self.input_samples[var])
-                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr}]
-                inputs = inputs.append(pd.DataFrame(summaries), sort = False)
-
             outputs = pd.DataFrame(columns = \
                     ['name','mean','median','mode', 'Q1', 'Q3','IQR'])
             for var in self.bluebox:
-                mu,med,mode,q1,q3,iqr =  self.summaries(self.outcomes[var])
-                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr}]
+                mu,med,mode,q1,q3,iqr,ci05,ci95 =  self.summaries(self.outcomes[var])
+                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr, 'CI (5%)': ci05, 'CI (95%)': ci95}]
                 outputs = outputs.append(pd.DataFrame(summaries), sort = False)
+
+            inputs = pd.DataFrame(columns = \
+                    ['name','mean','median','mode', 'Q1', 'Q3','IQR'])
+            for var in self.input_names:
+                mu,med,mode,q1,q3,iqr,ci05,ci95 = self.summaries(self.input_samples[var])
+                summaries = [{'name':var,'mean':mu,'median':med,'mode':mode,'Q1':q1,'Q3':q3,'IQR':iqr, 'CI (5%)': ci05, 'CI (95%)': ci95}]
+                inputs = inputs.append(pd.DataFrame(summaries), sort = False)
             return inputs, outputs
 
 
         def to_excel(self, filename = 'sensitivity.xlsx'):
             writer = pd.ExcelWriter(filename)
             i, o = self.summary_tables()
-            i.to_excel(writer,'input summaries')
-            o.to_excel(writer,'output summaries')
+            o.to_excel(writer,'input summaries')
+            i.to_excel(writer,'output summaries')
             self.input_samples.to_excel(writer,'full inputs')
             self.outcomes.to_excel(writer,'full outputs')
             for var in self.input_names: self.pd_hist(self.input_samples[var]).to_excel(writer,'in '+var)
             for outcome in self.bluebox: self.pd_hist(self.outcomes[outcome]).to_excel(writer,'out '+outcome)
+            writer.close()
         def plot(self):
                 for var in self.input_names:
                     fig, ax = plt.subplots()

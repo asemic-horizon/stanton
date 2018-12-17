@@ -8,7 +8,7 @@ As a demonstration, we'll study the range of a simple neural network:
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/net1.png)
 
-Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). 
+Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks).
 
 We will get to a result such as this:
 
@@ -36,24 +36,24 @@ To run simulations, we import the `Greenbox` and `Bluebox` classes from the `gre
 
     from greenbox import *
     import xlwings as xw
-    
-    n_samples = 500 
+
+    n_samples = 500
     print('{} samples'.format(n_samples))
- 
-    # we pass an object that supports the .Range() method. The simples is `xw` itself, 
+
+    # we pass an object that supports the .Range() method. The simples is `xw` itself,
     # but this requires the target spreadsheet to remain in Excel focus all the time
     greenbox = Greenbox(xw)
-    
+
     # notionally a greenbox could correspond to a number of blueboxes
     # we can even pass a separate .Range-supporting object using the  `excel_ref` parameter at init.
     bluebox = Bluebox(greenbox)
-    
+
     # this does the heavy lifting.
     bluebox.sample(n_samples)
-    
+
     # this saves histogram plots in png format for the greenbox (input) and bluebox (output) variables.
     bluebox.plot()
-    
+
     # this makes an excel spreadsheet
     bluebox.to_excel(filename = 'sensitivity.xlsx)
 
@@ -63,14 +63,14 @@ Script or batch mode is probably how most people who live in Excel want to work.
 
     from greenbox import *
     import xlwings as xw
-    
-    n_samples = 500 
-    
+
+    n_samples = 500
+
     greenbox = Greenbox(xw)
     bluebox = Bluebox(greenbox)
-    
+
     bluebox.sample(n_samples)
-    
+
     bluebox.plot(inputs = False, outputs = True, save = False)
 
 
@@ -78,8 +78,9 @@ Also for Jupyter data science types, the bluebox object has a `.input_samples` a
 
     from sklearn.tree import DecisionTreeRegressor
     tree = DecisionTreeRegressor()
-    tree.fit(X=bluebox.input_samples[['_a1','_a2','_b1', '_b2','_wa','_wb']], y = bluebox.outcomes['_y'])
-    
+    tree.fit(X=bluebox.input_samples, y = bluebox.outcomes['_y'])
+    export_graphviz(decision_tree = tree, out_file="test.dot", feature_names = bluebox.input_names)
+
  Done correctly maybe this helps make your spreadsheets explainable after all! (*Sad trombone plays*)
- 
+
 ![](https://github.com/asemic-horizon/stanton/blob/master/tree.png)

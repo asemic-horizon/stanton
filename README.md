@@ -80,4 +80,6 @@ Also for Jupyter data science types, the bluebox object has a `.input_samples` a
     tree = DecisionTreeRegressor()
     tree.fit(X=bluebox.input_samples[['_a1','_a2','_b1', '_b2','_wa','_wb']], y = bluebox.outcomes['_y'])
     
- Done correctly maybe this helps make your spreadsheets explainable after all!
+ Done correctly maybe this helps make your spreadsheets explainable after all! (*Sad trombone plays*)
+ 
+![](https://github.com/asemic-horizon/stanton/blob/master/greenbox.png)

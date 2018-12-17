@@ -1,6 +1,8 @@
 # Greenbox
 
-Greenbox is a Python module for Monte Carlo three-point-estimate sensitivity analysis. 
+Greenbox is a Python module for Monte Carlo three-point-estimate sensitivity analysis in Excel. It relies on [xlwings](https://www.xlwings.org/) to operate Excel from within Python. To install, clone this repository (or just download `greenbox.py` and `requirements.txt` and do
+
+   pip install -r requirements.txt
 
 As a demonstration, we'll study the range of a simple neural network:
 
@@ -30,7 +32,7 @@ The `bluebox` is simply a list of outputs.
 
 Python will actually only read the first column; the second says `=INDIRECT()` to the cell name so we can watch the numbers shuffle in one place, but that's optional.
 
-To run simulations, we import the `Greenbox` and `Bluebox` classes from the `greenbox` module and use them as follows:
+To run simulations, we import the `Greenbox` and `Bluebox` classes from the `greenbox` module and use them in script mode as follows:
 
     from greenbox import *
     import xlwings as xw
@@ -55,5 +57,27 @@ To run simulations, we import the `Greenbox` and `Bluebox` classes from the `gre
     # this makes an excel spreadsheet
     bluebox.to_excel(filename = 'sensitivity.xlsx)
 
- 
-(*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex sheet with >5 random inputs*).
+(*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex model with >5 random inputs*).
+
+In an interactive environment such as Jupyter you might want to look at the data in a more inline fashion. Here's an example that only plots outputs and doesn't save any pngs:
+
+    from greenbox import *
+    import xlwings as xw
+    
+    n_samples = 500 
+    
+    greenbox = Greenbox(xw)
+    bluebox = Bluebox(greenbox)
+    
+    bluebox.sample(n_samples)
+    
+    bluebox.plot(inputs = False outputs = True, save = False)
+
+
+Also for Jupyter data science types, the bluebox object has a `.input_samples` attribute, which is a pandas DataFrame with the random input samples, and similarly a `.outcomes` attribute, which is a DataFrame with the corresponding outputs. So the following is possible
+
+    from sklearn.tree import DecisionTreeRegressor
+    tree = DecisionTreeRegressor()
+    tree.fit(X=bluebox.input_samples[['_a1','_a2','_b1', '_b2','_wa','_wb']]
+    
+ Done correctly maybe this helps make your spreadsheets explainable after all!

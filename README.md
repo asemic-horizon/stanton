@@ -24,11 +24,11 @@ For an example, let's study the range of a simple neural network:
 
 Here we're leaving `_x1`, `_x2` fixed and varying the weights. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). We do that with the following snippet of code:
 
-    from stanton import *
+    from greenbox import *
     import xlwings as xw
     import sys
     
-    n_samples = 100
+    n_samples = 500
     print('{} samples'.format(n_samples))
     greenbox = Greenbox(xw)
     bluebox = Bluebox(greenbox)

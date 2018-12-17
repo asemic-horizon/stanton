@@ -59,7 +59,7 @@ To run simulations, we import the `Greenbox` and `Bluebox` classes from the `gre
 
 (*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex model with >5 random inputs*).
 
-In an interactive environment such as Jupyter you might want to look at the data in a more inline fashion. Here's an example that only plots outputs and doesn't save any pngs:
+Script or batch mode is probably how most people who live in Excel want to work. But users of interactive environment such as Jupyter you might want to look at the data in a more inline fashion. Here's an example that only plots outputs and doesn't save any pngs:
 
     from greenbox import *
     import xlwings as xw
@@ -78,6 +78,6 @@ Also for Jupyter data science types, the bluebox object has a `.input_samples` a
 
     from sklearn.tree import DecisionTreeRegressor
     tree = DecisionTreeRegressor()
-    tree.fit(X=bluebox.input_samples[['_a1','_a2','_b1', '_b2','_wa','_wb']]
+    tree.fit(X=bluebox.input_samples[['_a1','_a2','_b1', '_b2','_wa','_wb']], y = bluebox.outcomes['_y'])
     
  Done correctly maybe this helps make your spreadsheets explainable after all!

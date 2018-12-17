@@ -82,4 +82,4 @@ Also for Jupyter data science types, the bluebox object has a `.input_samples` a
     
  Done correctly maybe this helps make your spreadsheets explainable after all! (*Sad trombone plays*)
  
-![](https://github.com/asemic-horizon/stanton/blob/master/greenbox.png)
+![](https://github.com/asemic-horizon/stanton/blob/master/tree.png)

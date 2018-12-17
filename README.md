@@ -71,7 +71,7 @@ Script or batch mode is probably how most people who live in Excel want to work.
     
     bluebox.sample(n_samples)
     
-    bluebox.plot(inputs = False outputs = True, save = False)
+    bluebox.plot(inputs = False, outputs = True, save = False)
 
 
 Also for Jupyter data science types, the bluebox object has a `.input_samples` attribute, which is a pandas DataFrame with the random input samples, and similarly a `.outcomes` attribute, which is a DataFrame with the corresponding outputs. So the following is possible

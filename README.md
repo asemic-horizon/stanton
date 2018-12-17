@@ -8,6 +8,12 @@ As a demonstration, we'll study the range of a simple neural network:
 
 Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). 
 
+We will get to a result such as this:
+
+![](https://github.com/asemic-horizon/stanton/blob/master/output%20_y.png)
+
+as well as a spreadsheet containing histogram data for plotting directly in Excel, the full set of sample inputs and resulting outputs and some summary statistics.
+
 To use Greenbox, first give names to the cells you want to change (inputs) or watch (outputs)
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/cell_names.png)
@@ -38,7 +44,6 @@ To run simulations, we use a snippet of code such as the following:
     bluebox.sample(n_samples)
     bluebox.plot()
     bluebox.to_excel()
- 
- This will produce histograms and an Excel spreadsheet with summary statistics for all input and output variables, the full sample of random inputs and corresponding outputs, and histogram sheets that can be used to produce graphics.
+
  
 (*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex sheet with >5 random inputs*).

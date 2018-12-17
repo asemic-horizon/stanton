@@ -30,20 +30,30 @@ The `bluebox` is simply a list of outputs.
 
 Python will actually only read the first column; the second says `=INDIRECT()` to the cell name so we can watch the numbers shuffle in one place, but that's optional.
 
-To run simulations, we use a snippet of code such as the following:
+To run simulations, we import the `Greenbox` and `Bluebox` classes from the `greenbox` module and use them as follows:
 
     from greenbox import *
     import xlwings as xw
-    import sys
     
-    n_samples = 500
+    n_samples = 500 
     print('{} samples'.format(n_samples))
+ 
+    # we pass an object that supports the .Range() method. The simples is `xw` itself, 
+    # but this requires the target spreadsheet to remain in Excel focus all the time
     greenbox = Greenbox(xw)
+    
+    # notionally a greenbox could correspond to a number of blueboxes
+    # we can even pass a separate .Range-supporting object using the  `excel_ref` parameter at init.
     bluebox = Bluebox(greenbox)
     
+    # this does the heavy lifting.
     bluebox.sample(n_samples)
+    
+    # this saves histogram plots in png format for the greenbox (input) and bluebox (output) variables.
     bluebox.plot()
-    bluebox.to_excel()
+    
+    # this makes an excel spreadsheet
+    bluebox.to_excel(filename = 'sensitivity.xlsx)
 
  
 (*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex sheet with >5 random inputs*).

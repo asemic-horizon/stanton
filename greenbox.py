@@ -197,15 +197,17 @@ class Bluebox():
             for var in self.input_names: self.pd_hist(self.input_samples[var]).to_excel(writer,'in '+var)
             for outcome in self.bluebox: self.pd_hist(self.outcomes[outcome]).to_excel(writer,'out '+outcome)
             writer.close()
-        def plot(self):
-                for var in self.input_names:
-                    fig, ax = plt.subplots()
+        def plot(self, inputs = True, outputs = True, save = True):
+                if inputs:
+                    for var in self.input_names:
+                        fig, ax = plt.subplots()
 
-                    sns.distplot(self.input_samples[var], kde = True)
-                    ax.set_title('Input: '+var)
-                    fig.savefig('input '+var+'.png')
-                for outcome in self.outcomes:
-                    fig, ax = plt.subplots()
-                    sns.distplot(self.outcomes[outcome], kde = True)
-                    ax.set_title('Output: '+outcome)
-                    fig.savefig('output '+outcome+'.png')
+                        sns.distplot(self.input_samples[var], kde = True)
+                        ax.set_title('Input: '+var)
+                        if save: fig.savefig('input '+var+'.png')
+                if outputs:
+                    for outcome in self.outcomes:
+                        fig, ax = plt.subplots()
+                        sns.distplot(self.outcomes[outcome], kde = True)
+                        ax.set_title('Output: '+outcome)
+                        if save: fig.savefig('output '+outcome+'.png')

@@ -2,6 +2,12 @@
 
 Greenbox is a Python module for Monte Carlo three-point-estimate sensitivity analysis. 
 
+As a demonstration, we'll study the range of a simple neural network:
+
+![](https://github.com/asemic-horizon/stanton/blob/master/net1.png)
+
+Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). 
+
 To use Greenbox, first give names to the cells you want to change (inputs) or watch (outputs)
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/cell_names.png)
@@ -18,11 +24,7 @@ The `bluebox` is simply a list of outputs.
 
 Python will actually only read the first column; the second says `=INDIRECT()` to the cell name so we can watch the numbers shuffle in one place, but that's optional.
 
-For an example, let's study the range of a simple neural network:
-
-![](https://github.com/asemic-horizon/stanton/blob/master/net1.png)
-
-Here we're leaving `_x1`, `_x2` fixed and varying the weights. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). We do that with the following snippet of code:
+To run simulations, we use a snippet of code such as the following:
 
     from greenbox import *
     import xlwings as xw
@@ -39,4 +41,4 @@ Here we're leaving `_x1`, `_x2` fixed and varying the weights. A more realistic 
  
  This will produce histograms and an Excel spreadsheet with summary statistics for all input and output variables, the full sample of random inputs and corresponding outputs, and histogram sheets that can be used to produce graphics.
  
- Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex sheet with >5 random inputs.
+(*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex sheet with >5 random inputs*).

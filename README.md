@@ -26,7 +26,7 @@ The first column is the name of the cell that will be stressed; the next three c
 
 The `bluebox` is simply a list of outputs.
 
-![](https://github.com/asemic-horizon/stanton/blob/master/greenbox.png)
+![](https://github.com/asemic-horizon/stanton/blob/master/bluebox.png)
 
 Python will actually only read the first column; the second says `=INDIRECT()` to the cell name so we can watch the numbers shuffle in one place, but that's optional.
 

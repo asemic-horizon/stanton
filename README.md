@@ -1,16 +1,21 @@
-# Greenbox
+# Greenbox: a module for sensitivity analysis and model emulation
 
-Greenbox is a Python module for Monte Carlo three-point-estimate sensitivity analysis in Excel. It relies on [xlwings](https://www.xlwings.org/) to operate Excel from within Python. To install, clone this repository (or just download `greenbox.py` and `requirements.txt` and do
+Greenbox is a Python module for Monte Carlo three-point-estimate sensitivity analysis and model emulation in Excel. It relies on [xlwings](https://www.xlwings.org/) to operate Excel from within Python. To install, clone this repository (or just download `greenbox.py` and `requirements.txt` and do
 
-   pip install -r requirements.txt
+    pip install -r requirements.txt
 
-As a demonstration, we'll study the range of a simple neural network:
+## Sensitivity analysis
+
+As a demonstration, we'll study the "range of expression" of a simple neural network:
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/net1.png)
 
-Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks).
+Here, `_x1` and `_x2` are fixed inputs; `_a1,_a2` are weights leading into the intermediate unit `_a`, `_b1,_b2` are weights leading into the intermediate unit `_b` and finally `_y` is linked to `_a` and `_b` by the weights `_wa, _wb`. A more realistic use case, of course, are those financial spreadsheets that grow by accretion of consensus and that can't really be developed by alternate methodologies (such as Jupyter notebooks). Our goal is to specify probability distributions for the inputs such as
 
-We will get to a result such as this:
+![](https://github.com/asemic-horizon/stanton/blob/master/input%20_a1.png)
+
+
+and arrive at a result such as this:
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/output%20_y.png)
 
@@ -53,13 +58,12 @@ To run simulations, we import the `Greenbox` and `Bluebox` classes from the `gre
 
     # this saves histogram plots in png format for the greenbox (input) and bluebox (output) variables.
     bluebox.plot()
+    # on an environment such as Jupyter you can pass save=False.
 
     # this makes an excel spreadsheet
     bluebox.to_excel(filename = 'sensitivity.xlsx)
 
 (*Note that realistically you should be sampling ~1K for this problem size and  ~10K for any kind of complex model with >5 random inputs*).
-
-Script or batch mode is probably how most people who live in Excel want to work. But users of interactive environment such as Jupyter you might want to look at the data in a more inline fashion. Here's an example that only plots outputs and doesn't save any pngs:
 
     from greenbox import *
     import xlwings as xw
@@ -73,14 +77,24 @@ Script or batch mode is probably how most people who live in Excel want to work.
 
     bluebox.plot(inputs = False, outputs = True, save = False)
 
+## Model emulation
 
-Also for Jupyter data science types, the bluebox object has a `.input_samples` attribute, which is a pandas DataFrame with the random input samples, and similarly a `.outcomes` attribute, which is a DataFrame with the corresponding outputs. So the following is possible
+The idea of model emulation is to approximately replicate a spreadsheet that's too complex to understand with a statistical or machine learning model that's too opaque to understand. (*Sad trombone*) Here we will approximate a spreadsheet by a decision tree that is sort of visually inspectable.
+
+
+    from greenbox import *
+    import xlwings as xw
+    n_samples = 10000
+    greenbox = Greenbox(xw)
+    bluebox = Bluebox(greenbox)
+    bluebox.sample(n_samples)
 
     from sklearn.tree import DecisionTreeRegressor
     tree = DecisionTreeRegressor()
     tree.fit(X=bluebox.input_samples, y = bluebox.outcomes['_y'])
-    export_graphviz(decision_tree = tree, out_file="test.dot", feature_names = bluebox.input_names)
+    export_graphviz(decision_tree = tree, out_file="test.dot", feature_names = bluebox.input_names,
+                label = None, impurity = False, node_ids = False, rounded = True, filled = True)
 
- Done correctly maybe this helps make your spreadsheets explainable after all! (*Sad trombone plays*)
+The main idea in this code snippet is that input samples and outcomes are saved in the `bluebox` object as the `input_samples` and `outcomes` attributes, each of which is a pandas DataFrame. Here are the results.
 
 ![](https://github.com/asemic-horizon/stanton/blob/master/tree.png)

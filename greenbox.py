@@ -142,7 +142,7 @@ class Bluebox():
                 except:
                     print('Malfunctioning inputs:\n')
                     print(row)
-                    self.input_samples.drop(i)
+                    self.input_samples.drop(i, axis = 0)
 
 
         def pd_hist(self,v):
